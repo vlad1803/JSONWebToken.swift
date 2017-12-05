@@ -9,10 +9,8 @@
 import Foundation
 import CommonCrypto
 
-func rsa(_ keyData: Data, message: Data) -> Data? {
+func rsa(_ key: SecKey, message: Data) -> Data? {
   guard let hash = NSMutableData(length: Int(CC_SHA256_DIGEST_LENGTH)) else { return nil }
-
-  let key = keyData as! SecKey
 
   // Create SHA256 hash of the message
   CC_SHA256((message as NSData).bytes, CC_LONG(message.count), hash.mutableBytes.assumingMemoryBound(to: UInt8.self))
