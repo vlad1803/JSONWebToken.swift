@@ -15,6 +15,9 @@ public enum Algorithm: CustomStringConvertible {
   /// HMAC using SHA-512 hash algorithm
   case hs512(Data)
 
+  /// RSA using SHA-256 hash algorithm
+  case rs256(Data)
+
   public var description: String {
     switch self {
     case .none:
@@ -25,6 +28,8 @@ public enum Algorithm: CustomStringConvertible {
       return "HS384"
     case .hs512:
       return "HS512"
+    case .rs256:
+      return "RS256"
     }
   }
 
@@ -33,6 +38,12 @@ public enum Algorithm: CustomStringConvertible {
     func signHS(_ key: Data, algorithm: HMACAlgorithm) -> String {
       let messageData = message.data(using: String.Encoding.utf8, allowLossyConversion: false)!
       return base64encode(hmac(algorithm: algorithm, key: key, message: messageData))
+    }
+
+    func signRS(_ keyData: Data) -> String {
+      let messageData = message.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+
+      return base64encode(rsa(keyData, message: messageData)!)
     }
 
     switch self {
@@ -47,6 +58,8 @@ public enum Algorithm: CustomStringConvertible {
 
     case .hs512(let key):
       return signHS(key, algorithm: .sha512)
+    case .rs256(let keyData):
+      return signRS(keyData)
     }
   }
 
