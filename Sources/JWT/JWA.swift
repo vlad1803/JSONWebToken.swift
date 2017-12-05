@@ -40,7 +40,7 @@ public enum Algorithm: CustomStringConvertible {
       return base64encode(hmac(algorithm: algorithm, key: key, message: messageData))
     }
 
-    func signRS(_ keyData: SecKey) -> String {
+    func signRS(_ key: SecKey) -> String {
       let messageData = message.data(using: String.Encoding.utf8, allowLossyConversion: false)!
 
       return base64encode(rsa(key, message: messageData)!)
